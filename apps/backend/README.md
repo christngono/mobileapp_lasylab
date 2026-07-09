@@ -43,6 +43,26 @@ Défini dans [`prisma/schema.prisma`](prisma/schema.prisma) :
 | `Activity` | Écran Épreuves-exo (méthodes, définitions, épreuves, exercices) |
 | `Story` | Écran Status (stories) |
 
+## API (étape 3)
+
+Toutes les routes sont préfixées par `/api`. Les routes protégées exigent un
+en-tête `Authorization: Bearer <accessToken>`.
+
+| Méthode | Route | Auth | Rôle |
+|---------|-------|------|------|
+| `POST` | `/auth/register` | — | Inscription (retourne `accessToken` + `user`) |
+| `POST` | `/auth/login` | — | Connexion |
+| `GET` | `/auth/me` | ✅ | Profil courant |
+| `GET` | `/users/me` | ✅ | Profil courant |
+| `PATCH` | `/users/me` | ✅ | Mise à jour (nom, classe, objectif, école…) |
+| `GET` | `/subjects` | ✅ | Liste des matières |
+| `GET` | `/subjects/:id` | ✅ | Détail d'une matière |
+| `GET` | `/progress/me` | ✅ | Progression par matière + série/gemmes/XP |
+| `GET` | `/health` | — | Santé du service |
+
+Auth : **JWT** (HS256, secret `JWT_SECRET`) + mots de passe hachés **bcrypt**.
+Exemples de requêtes dans [`api.http`](api.http).
+
 ## Seed
 
 `npm run prisma:seed` insère : les 6 matières, la leçon **« Le Discriminant »**

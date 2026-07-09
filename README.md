@@ -56,7 +56,7 @@ n'est jamais exposée au client.
 
 - [x] **Étape 1** — Setup monorepo, scaffolding Expo + NestJS + shared, design tokens
 - [x] **Étape 2** — Modélisation BDD (Prisma/PostgreSQL) + seed
-- [ ] Étape 3 — Auth + API de base
+- [x] **Étape 3** — Auth (JWT + bcrypt) + API de base (users, subjects, progress)
 - [ ] Étape 4 — Fondations UI mobile
 - [ ] Étape 5 — Flux onboarding
 - [ ] Étape 6 — Module Leçons
