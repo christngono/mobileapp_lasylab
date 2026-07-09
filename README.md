@@ -59,7 +59,7 @@ n'est jamais exposée au client.
 - [x] **Étape 3** — Auth (JWT + bcrypt) + API de base (users, subjects, progress)
 - [x] **Étape 4** — Fondations UI mobile (polices, navigation, composants)
 - [x] **Étape 5** — Flux onboarding (splash → carrousel → inscription/connexion → profil/classe/objectif) branché sur l'API
-- [ ] Étape 6 — Module Leçons
+- [x] **Étape 6** — Module Leçons (Études, Parcours, Cours, Leçon-stories + endpoints contenu)
 - [ ] Étape 7 — Module Quiz & Épreuves
 - [ ] Étape 8 — Module socratique + Groq
 - [ ] Étape 9 — Écran Chat IA "Lasy"

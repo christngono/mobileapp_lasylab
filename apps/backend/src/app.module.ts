@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { SubjectsModule } from './modules/subjects/subjects.module';
 import { ProgressModule } from './modules/progress/progress.module';
+import { LessonsModule } from './modules/lessons/lessons.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { ProgressModule } from './modules/progress/progress.module';
     UsersModule,
     SubjectsModule,
     ProgressModule,
-    // Modules à venir : lessons, quiz, socratic, badges/status.
+    LessonsModule,
+    // Modules à venir : quiz, socratic, badges/status.
   ],
   controllers: [HealthController],
 })

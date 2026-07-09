@@ -7,4 +7,6 @@ export { ProgressRing } from './ProgressRing';
 export { Pill } from './Pill';
 export { TextField } from './TextField';
 export { Logo, Mascot } from './Brand';
+export { SubjectIcon } from './SubjectIcon';
+export { LoadingView, ErrorView } from './StateView';
 export * from './icons';

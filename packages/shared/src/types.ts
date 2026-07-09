@@ -1,4 +1,4 @@
-import type { Classe, NodeKind, Objectif, SubjectId } from './subjects';
+import type { Classe, NodeKind, Objectif, SubjectId, SubjectMeta } from './subjects';
 
 /** Rôle d'un compte : élève ou parent. */
 export type UserRole = 'student' | 'parent';
@@ -88,6 +88,32 @@ export interface QuizResultDTO {
   xpEarned: number;
   /** Détail par question : bonne réponse attendue. */
   corrections: { questionId: string; correctIndex: number; wasCorrect: boolean }[];
+}
+
+/* ------------------------------ Parcours ---------------------------- */
+
+export type NodeStatus = 'done' | 'current' | 'locked';
+
+export interface ParcoursNodeDTO {
+  nodeIndex: number;
+  kind: NodeKind;
+  label: string;
+  status: NodeStatus;
+  /** Vrai si une leçon/un quiz existe réellement pour ce nœud. */
+  hasContent: boolean;
+}
+
+export interface ParcoursDTO {
+  subject: SubjectMeta;
+  total: number;
+  completedNodes: number;
+  nodes: ParcoursNodeDTO[];
+}
+
+/** Marque un nœud comme terminé (progression). */
+export interface CompleteNodeDTO {
+  subjectId: SubjectId;
+  nodeIndex: number;
 }
 
 /* ---------------------------- Progression --------------------------- */
