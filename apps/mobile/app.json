@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Lasylab",
+    "slug": "lasylab",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo.png",
+    "scheme": "lasylab",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lasylab.app"
+    },
+    "android": {
+      "package": "com.lasylab.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo.png",
+        "backgroundColor": "#fbf4ef"
+      }
+    },
+    "extra": {
+      "apiUrl": "http://localhost:3000/api"
+    }
+  }
+}
