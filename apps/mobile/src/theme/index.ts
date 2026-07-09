@@ -2,7 +2,7 @@ export { colors } from './colors';
 export type { ColorToken } from './colors';
 export { fonts, textStyles } from './typography';
 export { radius, spacing, shadows, button3d } from './layout';
-export { fontModules } from './fonts';
+export { useAppFonts } from './fonts';
 
 import { colors } from './colors';
 import { fonts, textStyles } from './typography';
