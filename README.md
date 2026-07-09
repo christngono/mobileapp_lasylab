@@ -58,7 +58,7 @@ n'est jamais exposée au client.
 - [x] **Étape 2** — Modélisation BDD (Prisma/PostgreSQL) + seed
 - [x] **Étape 3** — Auth (JWT + bcrypt) + API de base (users, subjects, progress)
 - [x] **Étape 4** — Fondations UI mobile (polices, navigation, composants)
-- [ ] Étape 5 — Flux onboarding
+- [x] **Étape 5** — Flux onboarding (splash → carrousel → inscription/connexion → profil/classe/objectif) branché sur l'API
 - [ ] Étape 6 — Module Leçons
 - [ ] Étape 7 — Module Quiz & Épreuves
 - [ ] Étape 8 — Module socratique + Groq

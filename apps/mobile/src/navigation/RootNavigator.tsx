@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './types';
+import { useSession } from '../store/session';
 import { MainTabs } from './MainTabs';
 import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
@@ -25,9 +26,13 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
  * à l'étape 5.
  */
 export function RootNavigator() {
+  const { isAuthenticated } = useSession();
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        initialRouteName={isAuthenticated ? 'Main' : 'Splash'}
+        screenOptions={{ headerShown: false }}
+      >
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Inscription" component={InscriptionScreen} />

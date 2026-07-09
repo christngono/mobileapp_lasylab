@@ -4,21 +4,24 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreenModule from 'expo-splash-screen';
 import { RootNavigator } from './src/navigation/RootNavigator';
+import { SessionProvider, useSession } from './src/store/session';
 import { Logo } from './src/components';
 import { colors, useAppFonts } from './src/theme';
 
 SplashScreenModule.preventAutoHideAsync().catch(() => {});
 
-export default function App() {
+function Root() {
   const fontsLoaded = useAppFonts();
+  const { isLoading } = useSession();
+  const ready = fontsLoaded && !isLoading;
 
   useEffect(() => {
-    if (fontsLoaded) {
+    if (ready) {
       SplashScreenModule.hideAsync().catch(() => {});
     }
-  }, [fontsLoaded]);
+  }, [ready]);
 
-  if (!fontsLoaded) {
+  if (!ready) {
     return (
       <View style={styles.loading}>
         <Logo height={56} />
@@ -26,10 +29,16 @@ export default function App() {
     );
   }
 
+  return <RootNavigator />;
+}
+
+export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
-      <RootNavigator />
+      <SessionProvider>
+        <Root />
+      </SessionProvider>
     </SafeAreaProvider>
   );
 }

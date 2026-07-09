@@ -5,5 +5,6 @@ export { Card } from './Card';
 export { ProgressBar } from './ProgressBar';
 export { ProgressRing } from './ProgressRing';
 export { Pill } from './Pill';
+export { TextField } from './TextField';
 export { Logo, Mascot } from './Brand';
 export * from './icons';
