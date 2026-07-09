@@ -1,7 +1,7 @@
 // Schéma Prisma — Lasylab
-// Étape 1 : datasource + generator uniquement.
-// Les modèles (users, subjects, lessons, quiz, results, sessions socratiques,
-// progression, badges) seront définis à l'étape 2 (modélisation BDD).
+// Modélisation : utilisateurs (élève + parent), matières, leçons & nœuds de
+// parcours, quiz/questions, résultats, sessions socratiques + messages,
+// progression par matière, badges, activités (épreuves), stories/status.
 
 generator client {
   provider = "prisma-client-js"
@@ -10,4 +10,260 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+/* ------------------------------ Enums ------------------------------ */
+
+enum UserRole {
+  STUDENT
+  PARENT
+}
+
+enum NodeKind {
+  INTRO
+  LESSON
+  QUIZ
+}
+
+enum ChatRole {
+  USER
+  ASSISTANT
+}
+
+enum ActivityCategory {
+  METHODE
+  DEFINITION
+  EPREUVE
+  EXERCICE
+}
+
+/* --------------------------- Utilisateurs -------------------------- */
+
+model User {
+  id           String   @id @default(cuid())
+  role         UserRole @default(STUDENT)
+  name         String
+  firstName    String?
+  phone        String   @unique
+  passwordHash String
+  birthYear    Int?
+  school       String?
+  classe       String? // ex. "1ère" (voir CLASSES dans @lasylab/shared)
+  objectif     String?
+  consent      Boolean  @default(false)
+
+  // Gamification (série, gemmes, XP)
+  streak Int @default(0)
+  gems   Int @default(0)
+  xp     Int @default(0)
+
+  // Relation parent -> enfants (un parent peut suivre plusieurs élèves)
+  parentId String?
+  parent   User?   @relation("ParentChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  children User[]  @relation("ParentChildren")
+
+  progress         Progress[]
+  quizResults      QuizResult[]
+  socraticSessions SocraticSession[]
+  badges           UserBadge[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([parentId])
+}
+
+/* ----------------------------- Matières ---------------------------- */
+
+model Subject {
+  id       String @id // slug : "maths", "francais", ...
+  name     String
+  short    String
+  color    String
+  barColor String
+  order    Int    @default(0)
+
+  lessons          Lesson[]
+  quizzes          Quiz[]
+  progress         Progress[]
+  socraticSessions SocraticSession[]
+
+  createdAt DateTime @default(now())
+}
+
+/* ------------------------- Leçons & parcours ----------------------- */
+
+// Un nœud de type INTRO ou LESSON du parcours d'une matière.
+model Lesson {
+  id        String   @id @default(cuid())
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId String
+  nodeIndex Int // position dans le parcours (0..PARCOURS_TOTAL_NODES-1)
+  kind      NodeKind @default(LESSON)
+  title     String
+  body      String? // contenu long affiché dans l'écran "Cours"
+
+  slides LessonSlide[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([subjectId, nodeIndex])
+  @@index([subjectId])
+}
+
+// Une diapositive "stories" d'une leçon.
+model LessonSlide {
+  id       String @id @default(cuid())
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId String
+  order    Int
+  big      String
+  sub      String
+
+  @@index([lessonId])
+}
+
+/* ------------------------------ Quiz ------------------------------- */
+
+// Un nœud de type QUIZ du parcours d'une matière.
+model Quiz {
+  id        String  @id @default(cuid())
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId String
+  nodeIndex Int
+  title     String
+
+  questions QuizQuestion[]
+  results   QuizResult[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([subjectId, nodeIndex])
+  @@index([subjectId])
+}
+
+model QuizQuestion {
+  id           String   @id @default(cuid())
+  quiz         Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId       String
+  order        Int
+  question     String
+  options      String[] // choix proposés
+  correctIndex Int // index de la bonne réponse (jamais renvoyé au client avant correction)
+
+  @@index([quizId])
+}
+
+model QuizResult {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId    String
+  score     Int
+  total     Int
+  xpEarned  Int
+  answers   Int[] // index choisis par l'élève, dans l'ordre des questions
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([quizId])
+}
+
+/* -------------------------- Progression ---------------------------- */
+
+// Progression d'un élève sur une matière (nombre de nœuds validés).
+model Progress {
+  id             String  @id @default(cuid())
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  subject        Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId      String
+  completedNodes Int     @default(0)
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, subjectId])
+  @@index([userId])
+}
+
+/* ----------------------------- Badges ------------------------------ */
+
+model Badge {
+  id    String @id @default(cuid())
+  code  String @unique // identifiant stable : "first_quiz", "streak_5", ...
+  label String
+  icon  String // emoji ou identifiant d'icône
+  order Int    @default(0)
+
+  users UserBadge[]
+}
+
+model UserBadge {
+  id       String   @id @default(cuid())
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  badge    Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  badgeId  String
+  earnedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+}
+
+/* ----------------------- Sessions socratiques ---------------------- */
+
+model SocraticSession {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  subject   Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  subjectId String?
+
+  messages SocraticMessage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model SocraticMessage {
+  id        String          @id @default(cuid())
+  session   SocraticSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId String
+  role      ChatRole
+  text      String
+  createdAt DateTime        @default(now())
+
+  @@index([sessionId])
+}
+
+/* ----------------------- Activités / Épreuves ---------------------- */
+
+// Écran "Épreuves-exo" : méthodes, définitions, épreuves, exercices.
+model Activity {
+  id           String           @id @default(cuid())
+  category     ActivityCategory
+  title        String
+  subjectLabel String // libellé matière affiché (ex. "MATHS", "HISTOIRE")
+  subtitle     String? // ex. année "2018", "Chap 12"
+  body         String? // contenu détaillé (écran EpreuveDetail)
+  progressPct  Int? // barre de progression pour les exercices
+  order        Int              @default(0)
+
+  createdAt DateTime @default(now())
+}
+
+/* ------------------------- Stories / Status ------------------------ */
+
+model Story {
+  id    String @id @default(cuid())
+  bg    String // dégradé CSS repris du design
+  tag   String // ex. "MATHS · Astuce"
+  title String
+  text  String
+  order Int    @default(0)
+
+  createdAt DateTime @default(now())
 }
