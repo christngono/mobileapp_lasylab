@@ -8,6 +8,8 @@ import { UsersModule } from './modules/users/users.module';
 import { SubjectsModule } from './modules/subjects/subjects.module';
 import { ProgressModule } from './modules/progress/progress.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
+import { QuizModule } from './modules/quiz/quiz.module';
+import { ActivitiesModule } from './modules/activities/activities.module';
 
 @Module({
   imports: [
@@ -21,7 +23,9 @@ import { LessonsModule } from './modules/lessons/lessons.module';
     SubjectsModule,
     ProgressModule,
     LessonsModule,
-    // Modules à venir : quiz, socratic, badges/status.
+    QuizModule,
+    ActivitiesModule,
+    // Modules à venir : socratic, badges/status.
   ],
   controllers: [HealthController],
 })

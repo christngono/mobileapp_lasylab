@@ -60,7 +60,7 @@ n'est jamais exposée au client.
 - [x] **Étape 4** — Fondations UI mobile (polices, navigation, composants)
 - [x] **Étape 5** — Flux onboarding (splash → carrousel → inscription/connexion → profil/classe/objectif) branché sur l'API
 - [x] **Étape 6** — Module Leçons (Études, Parcours, Cours, Leçon-stories + endpoints contenu)
-- [ ] Étape 7 — Module Quiz & Épreuves
+- [x] **Étape 7** — Module Quiz & Épreuves (correction/score + écrans Quiz, Épreuves-exo, Détail)
 - [ ] Étape 8 — Module socratique + Groq
 - [ ] Étape 9 — Écran Chat IA "Lasy"
 - [ ] Étape 10 — Statuts & progression

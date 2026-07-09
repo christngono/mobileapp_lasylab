@@ -1,7 +1,10 @@
 import type {
+  ActivityDTO,
   LessonDTO,
   ParcoursDTO,
   ProgressDTO,
+  QuizDTO,
+  QuizResultDTO,
   SubjectId,
   SubjectMeta,
 } from '@lasylab/shared';
@@ -31,5 +34,26 @@ export const lessonsApi = {
   },
   lesson(subjectId: SubjectId, nodeIndex: number) {
     return apiRequest<LessonDTO>(`/lessons/${subjectId}/${nodeIndex}`);
+  },
+};
+
+export const quizApi = {
+  get(subjectId: SubjectId, nodeIndex: number) {
+    return apiRequest<QuizDTO>(`/quiz/${subjectId}/${nodeIndex}`);
+  },
+  submit(subjectId: SubjectId, nodeIndex: number, answers: number[]) {
+    return apiRequest<QuizResultDTO>('/quiz/submit', {
+      method: 'POST',
+      body: { subjectId, nodeIndex, answers },
+    });
+  },
+};
+
+export const activitiesApi = {
+  list() {
+    return apiRequest<ActivityDTO[]>('/activities');
+  },
+  get(id: string) {
+    return apiRequest<ActivityDTO>(`/activities/${id}`);
   },
 };

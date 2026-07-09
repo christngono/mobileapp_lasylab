@@ -75,19 +75,33 @@ export interface QuizDTO {
   questions: QuizQuestionDTO[];
 }
 
-/** Soumission d'un quiz : liste des index choisis par question. */
+/** Soumission d'un quiz : matière, nœud et index choisis par question. */
 export interface QuizSubmissionDTO {
-  quizId: string;
+  subjectId: SubjectId;
+  nodeIndex: number;
   answers: number[];
 }
 
 export interface QuizResultDTO {
-  quizId: string;
   score: number;
   total: number;
   xpEarned: number;
   /** Détail par question : bonne réponse attendue. */
   corrections: { questionId: string; correctIndex: number; wasCorrect: boolean }[];
+}
+
+/* --------------------- Activités / Épreuves-exo --------------------- */
+
+export type ActivityCategory = 'METHODE' | 'DEFINITION' | 'EPREUVE' | 'EXERCICE';
+
+export interface ActivityDTO {
+  id: string;
+  category: ActivityCategory;
+  title: string;
+  subjectLabel: string;
+  subtitle?: string | null;
+  body?: string | null;
+  progressPct?: number | null;
 }
 
 /* ------------------------------ Parcours ---------------------------- */

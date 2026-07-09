@@ -61,6 +61,10 @@ en-tête `Authorization: Bearer <accessToken>`.
 | `POST` | `/progress/complete` | ✅ | Marque un nœud terminé (avance la progression) |
 | `GET` | `/parcours/:subjectId` | ✅ | Parcours (21 nœuds calculés + statut) |
 | `GET` | `/lessons/:subjectId/:nodeIndex` | ✅ | Contenu d'une leçon (fallback générique) |
+| `GET` | `/quiz/:subjectId/:nodeIndex` | ✅ | Quiz d'un nœud (QCM) |
+| `POST` | `/quiz/submit` | ✅ | Correction (score, XP, progression, badge) |
+| `GET` | `/activities` | ✅ | Liste des activités (épreuves-exo) |
+| `GET` | `/activities/:id` | ✅ | Détail d'une activité |
 | `GET` | `/health` | — | Santé du service |
 
 Auth : **JWT** (HS256, secret `JWT_SECRET`) + mots de passe hachés **bcrypt**.
