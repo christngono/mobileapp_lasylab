@@ -7,7 +7,7 @@ import type { RootStackParamList } from '../navigation/types';
 type Props = NativeStackScreenProps<RootStackParamList, 'Congratulations'>;
 
 export default function CongratulationsScreen({ navigation, route }: Props) {
-  const { role } = route.params;
+  const role = route.params?.role ?? 'student';
   const subtitle =
     role === 'teacher'
       ? 'Ton compte est créé. Choisis maintenant les classes que tu enseignes.'

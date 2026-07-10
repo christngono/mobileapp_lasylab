@@ -10,7 +10,7 @@ import type { RootStackParamList } from '../navigation/types';
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseClasse'>;
 
 export default function ChooseClasseScreen({ navigation, route }: Props) {
-  const { role } = route.params;
+  const role = route.params?.role ?? 'student';
   const isTeacher = role === 'teacher';
   const { updateProfile } = useSession();
   // Élève : une seule classe. Enseignant : plusieurs.

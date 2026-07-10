@@ -10,7 +10,7 @@ import type { RootStackParamList } from '../navigation/types';
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseObjectif'>;
 
 export default function ChooseObjectifScreen({ navigation, route }: Props) {
-  const { role } = route.params;
+  const role = route.params?.role ?? 'student';
   const options: readonly string[] = role === 'teacher' ? TEACHER_OBJECTIFS : OBJECTIFS;
   const { updateProfile } = useSession();
   const [selected, setSelected] = useState<string[]>([]);

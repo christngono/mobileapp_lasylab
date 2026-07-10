@@ -34,7 +34,7 @@ const YEAR_OPTIONS: PickerOption[] = Array.from({ length: 25 }, (_, i) => {
 });
 
 export default function InscriptionScreen({ navigation, route }: Props) {
-  const { role } = route.params;
+  const role = route.params?.role ?? 'student';
   const { register } = useSession();
 
   const [name, setName] = useState('');
