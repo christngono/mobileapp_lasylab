@@ -16,6 +16,7 @@ datasource db {
 enum UserRole {
   STUDENT
   PARENT
+  TEACHER
 }
 
 enum NodeKind {
@@ -42,22 +43,30 @@ model User {
   role         UserRole @default(STUDENT)
   name         String
   firstName    String?
-  phone        String   @unique
-  passwordHash String
+  // Optionnels : un compte enfant n'a ni téléphone ni mot de passe (accès via le parent).
+  phone        String?  @unique
+  passwordHash String?
   birthYear    Int?
-  school       String?
-  classe       String? // ex. "1ère" (voir CLASSES dans @lasylab/shared)
-  objectif     String?
+  school       String? // école (élève, unique)
+  classe       String? // classe actuelle (élève) — voir CLASSES dans @lasylab/shared
   consent      Boolean  @default(false)
+
+  // Champs multi-valués selon le rôle
+  objectifs String[] @default([]) // objectifs choisis (multi)
+  subjects  String[] @default([]) // matières enseignées (enseignant)
+  schools   String[] @default([]) // écoles où l'enseignant intervient
+  classes   String[] @default([]) // classes enseignées (enseignant)
+
+  childrenCount Int? // nombre d'enfants déclaré (parent)
 
   // Gamification (série, gemmes, XP)
   streak Int @default(0)
   gems   Int @default(0)
   xp     Int @default(0)
 
-  // Relation parent -> enfants (un parent peut suivre plusieurs élèves)
+  // Relation parent -> enfants (un parent gère plusieurs comptes enfants)
   parentId String?
-  parent   User?   @relation("ParentChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  parent   User?   @relation("ParentChildren", fields: [parentId], references: [id], onDelete: Cascade)
   children User[]  @relation("ParentChildren")
 
   progress         Progress[]

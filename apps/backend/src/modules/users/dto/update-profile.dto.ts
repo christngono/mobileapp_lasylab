@@ -1,7 +1,10 @@
-import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
-import { CLASSES, OBJECTIFS, type Classe, type Objectif } from '@lasylab/shared';
+import { IsArray, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { CLASSES, SUBJECTS, type Classe, type SubjectId } from '@lasylab/shared';
 
-/** Mise à jour du profil élève (notamment pendant l'onboarding). */
+const CLASSE_VALUES = CLASSES as unknown as string[];
+const SUBJECT_IDS = SUBJECTS.map((s) => s.id);
+
+/** Mise à jour du profil (onboarding et édition ultérieure). */
 export class UpdateProfileDto {
   @IsOptional()
   @IsString()
@@ -11,13 +14,10 @@ export class UpdateProfileDto {
   @IsString()
   firstName?: string;
 
+  // Élève : classe unique
   @IsOptional()
-  @IsIn(CLASSES as unknown as string[])
+  @IsIn(CLASSE_VALUES)
   classe?: Classe;
-
-  @IsOptional()
-  @IsIn(OBJECTIFS as unknown as string[])
-  objectif?: Objectif;
 
   @IsOptional()
   @IsInt()
@@ -28,4 +28,26 @@ export class UpdateProfileDto {
   @IsOptional()
   @IsString()
   school?: string;
+
+  // Objectifs (multi)
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  objectifs?: string[];
+
+  // Enseignant : classes / matières / écoles (multi)
+  @IsOptional()
+  @IsArray()
+  @IsIn(CLASSE_VALUES, { each: true })
+  classes?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsIn(SUBJECT_IDS, { each: true })
+  subjects?: SubjectId[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  schools?: string[];
 }

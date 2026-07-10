@@ -28,6 +28,7 @@ export class AuthService {
       throw new ConflictException('Un compte existe déjà avec ce numéro.');
     }
 
+    const role = toPrismaRole(dto.role);
     const passwordHash = await bcrypt.hash(dto.password, 10);
     const user = await this.prisma.user.create({
       data: {
@@ -35,10 +36,16 @@ export class AuthService {
         firstName: dto.firstName ?? null,
         phone: dto.phone,
         passwordHash,
-        birthYear: dto.birthYear ?? null,
-        school: dto.school ?? null,
-        role: toPrismaRole(dto.role),
+        role,
         consent: dto.consent ?? false,
+        // Élève
+        birthYear: role === 'STUDENT' ? (dto.birthYear ?? null) : null,
+        school: role === 'STUDENT' ? (dto.school ?? null) : null,
+        // Enseignant
+        subjects: role === 'TEACHER' ? (dto.subjects ?? []) : [],
+        schools: role === 'TEACHER' ? (dto.schools ?? []) : [],
+        // Parent
+        childrenCount: role === 'PARENT' ? (dto.childrenCount ?? null) : null,
       },
     });
 
@@ -49,7 +56,7 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: { phone: dto.phone },
     });
-    if (!user) {
+    if (!user || !user.passwordHash) {
       throw new UnauthorizedException('Numéro ou mot de passe incorrect.');
     }
     const ok = await bcrypt.compare(dto.password, user.passwordHash);
@@ -59,7 +66,8 @@ export class AuthService {
     return this.buildResponse(user);
   }
 
-  private async buildResponse(user: User): Promise<AuthResponseDTO> {
+  /** Émet un jeton pour un compte (utilisé par le parent pour « entrer » comme un enfant). */
+  async buildResponse(user: User): Promise<AuthResponseDTO> {
     const payload: JwtPayload = { sub: user.id, role: user.role };
     const accessToken = await this.jwt.signAsync(payload);
     return { accessToken, user: toUserDTO(user) };

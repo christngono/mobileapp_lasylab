@@ -38,7 +38,7 @@ export const PARCOURS_TOTAL_NODES = 21;
 export const CLASSES = ['6e', '5e', '4e', '3e', '1ère', '2nde', 'Tle'] as const;
 export type Classe = (typeof CLASSES)[number];
 
-/** Objectifs pédagogiques proposés à l'onboarding (OBJECTIFS dans le mock). */
+/** Objectifs pédagogiques de l'élève (choix unique historique). */
 export const OBJECTIFS = [
   'Augmenter mes notes',
   'Réussir mon examen',
@@ -46,6 +46,14 @@ export const OBJECTIFS = [
   'Améliorer mon niveau',
 ] as const;
 export type Objectif = (typeof OBJECTIFS)[number];
+
+/** Objectifs proposés à l'enseignant (choix multiples). */
+export const TEACHER_OBJECTIFS = [
+  'Créer des contenus pédagogiques',
+  "Apprendre à utiliser l'IA",
+  'Créer une classe virtuelle',
+] as const;
+export type TeacherObjectif = (typeof TEACHER_OBJECTIFS)[number];
 
 /** Nature d'un nœud de parcours (introduction, leçon ou quiz). */
 export type NodeKind = 'intro' | 'lesson' | 'quiz';

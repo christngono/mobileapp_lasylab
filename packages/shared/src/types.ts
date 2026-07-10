@@ -1,18 +1,31 @@
-import type { Classe, NodeKind, Objectif, SubjectId, SubjectMeta } from './subjects';
+import type { Classe, NodeKind, SubjectId, SubjectMeta } from './subjects';
 
-/** Rôle d'un compte : élève ou parent. */
-export type UserRole = 'student' | 'parent';
+/** Rôle d'un compte : élève, parent ou enseignant. */
+export type UserRole = 'student' | 'parent' | 'teacher';
 
 export interface UserDTO {
   id: string;
   role: UserRole;
   name: string;
   firstName?: string | null;
-  phone: string;
+  phone?: string | null;
   birthYear?: number | null;
+  /** École (élève, unique). */
   school?: string | null;
+  /** Classe actuelle (élève, unique). */
   classe?: Classe | null;
-  objectif?: Objectif | null;
+  /** Objectifs sélectionnés (multi). */
+  objectifs: string[];
+  /** Matières enseignées (enseignant). */
+  subjects: SubjectId[];
+  /** Écoles où l'enseignant intervient (enseignant, facultatif). */
+  schools: string[];
+  /** Classes enseignées (enseignant). */
+  classes: string[];
+  /** Nombre d'enfants déclaré (parent). */
+  childrenCount?: number | null;
+  /** Vrai si ce compte est un enfant rattaché à un parent. */
+  isChild?: boolean;
   createdAt: string;
 }
 
@@ -23,10 +36,16 @@ export interface RegisterDTO {
   firstName?: string;
   phone: string;
   password: string;
-  birthYear?: number;
-  school?: string;
   role?: UserRole;
   consent?: boolean;
+  // Élève
+  birthYear?: number;
+  school?: string;
+  // Enseignant
+  subjects?: SubjectId[];
+  schools?: string[];
+  // Parent
+  childrenCount?: number;
 }
 
 export interface LoginDTO {
@@ -37,6 +56,20 @@ export interface LoginDTO {
 export interface AuthResponseDTO {
   accessToken: string;
   user: UserDTO;
+}
+
+/* ---------------------- Comptes enfants (parent) -------------------- */
+
+export interface ChildDTO {
+  id: string;
+  name: string; // prénom de l'enfant
+  classe?: Classe | null;
+  createdAt: string;
+}
+
+export interface CreateChildDTO {
+  name: string;
+  classe?: Classe;
 }
 
 /* ------------------------------ Contenu ----------------------------- */

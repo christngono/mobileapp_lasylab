@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsBoolean,
   IsIn,
   IsInt,
@@ -8,7 +9,9 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import type { RegisterDTO, UserRole } from '@lasylab/shared';
+import { SUBJECTS, type RegisterDTO, type SubjectId, type UserRole } from '@lasylab/shared';
+
+const SUBJECT_IDS = SUBJECTS.map((s) => s.id);
 
 export class RegisterDto implements RegisterDTO {
   @IsString()
@@ -28,6 +31,15 @@ export class RegisterDto implements RegisterDTO {
   password!: string;
 
   @IsOptional()
+  @IsIn(['student', 'parent', 'teacher'])
+  role?: UserRole;
+
+  @IsOptional()
+  @IsBoolean()
+  consent?: boolean;
+
+  // Élève
+  @IsOptional()
   @IsInt()
   @Min(1950)
   @Max(new Date().getFullYear())
@@ -37,11 +49,21 @@ export class RegisterDto implements RegisterDTO {
   @IsString()
   school?: string;
 
+  // Enseignant
   @IsOptional()
-  @IsIn(['student', 'parent'])
-  role?: UserRole;
+  @IsArray()
+  @IsIn(SUBJECT_IDS, { each: true })
+  subjects?: SubjectId[];
 
   @IsOptional()
-  @IsBoolean()
-  consent?: boolean;
+  @IsArray()
+  @IsString({ each: true })
+  schools?: string[];
+
+  // Parent
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(20)
+  childrenCount?: number;
 }

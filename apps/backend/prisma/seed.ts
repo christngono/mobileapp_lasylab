@@ -180,7 +180,7 @@ async function seedDemoUser() {
       phone: '+22900000000',
       passwordHash,
       classe: '1ère',
-      objectif: 'Augmenter mes notes',
+      objectifs: ['Augmenter mes notes'],
       birthYear: 2008,
       school: 'Lycée Lasylab',
       consent: true,
@@ -214,6 +214,56 @@ async function seedDemoUser() {
   console.log('✓ Élève de démo : Sara (+22900000000 / lasylab)');
 }
 
+async function seedDemoTeacher() {
+  const passwordHash = await bcrypt.hash('lasylab', 10);
+  await prisma.user.upsert({
+    where: { phone: '+22900000001' },
+    update: {},
+    create: {
+      role: UserRole.TEACHER,
+      name: 'M. Koffi',
+      phone: '+22900000001',
+      passwordHash,
+      subjects: ['maths', 'informatique'],
+      schools: ['Lycée Lasylab'],
+      classes: ['1ère', 'Tle'],
+      objectifs: ['Créer des contenus pédagogiques', "Apprendre à utiliser l'IA"],
+      consent: true,
+    },
+  });
+  console.log('✓ Enseignant de démo : M. Koffi (+22900000001 / lasylab)');
+}
+
+async function seedDemoParent() {
+  const passwordHash = await bcrypt.hash('lasylab', 10);
+  const parent = await prisma.user.upsert({
+    where: { phone: '+22900000002' },
+    update: {},
+    create: {
+      role: UserRole.PARENT,
+      name: 'Mme Adjovi',
+      phone: '+22900000002',
+      passwordHash,
+      childrenCount: 2,
+      consent: true,
+    },
+  });
+
+  // Deux comptes enfants rattachés (prénoms), s'ils n'existent pas déjà.
+  const existing = await prisma.user.count({ where: { parentId: parent.id } });
+  if (existing === 0) {
+    for (const [name, classe] of [
+      ['Tatiane', '3e'],
+      ['Hugues', '1ère'],
+    ] as const) {
+      await prisma.user.create({
+        data: { role: UserRole.STUDENT, name, classe, parentId: parent.id },
+      });
+    }
+  }
+  console.log('✓ Parent de démo : Mme Adjovi (+22900000002 / lasylab) + 2 enfants');
+}
+
 async function main() {
   console.log('🌱 Seed Lasylab…');
   await seedSubjects();
@@ -223,6 +273,8 @@ async function main() {
   await seedActivities();
   await seedBadges();
   await seedDemoUser();
+  await seedDemoTeacher();
+  await seedDemoParent();
   console.log('✅ Seed terminé.');
 }
 

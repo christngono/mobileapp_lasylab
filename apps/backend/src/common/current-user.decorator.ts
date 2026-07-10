@@ -3,7 +3,7 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 /** Identité extraite du JWT et attachée à la requête par le JwtAuthGuard. */
 export interface AuthUser {
   id: string;
-  role: 'STUDENT' | 'PARENT';
+  role: 'STUDENT' | 'PARENT' | 'TEACHER';
 }
 
 /** Injecte l'utilisateur authentifié courant dans un handler de contrôleur. */

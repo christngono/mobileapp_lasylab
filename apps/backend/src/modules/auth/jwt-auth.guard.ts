@@ -10,7 +10,7 @@ import type { Request } from 'express';
 
 export interface JwtPayload {
   sub: string;
-  role: 'STUDENT' | 'PARENT';
+  role: 'STUDENT' | 'PARENT' | 'TEACHER';
 }
 
 /**
