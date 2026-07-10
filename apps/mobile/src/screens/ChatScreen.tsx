@@ -175,27 +175,32 @@ export default function ChatScreen() {
         {/* Suggestions */}
         {layout === 'coach' ? (
           <View style={styles.coachSuggestions}>
-            {SUGGESTIONS.slice(0, 2).map((s) => (
+            {SUGGESTIONS.slice(0, 3).map((s) => (
               <Pressable key={s} style={styles.coachSuggestion} onPress={() => send(s)}>
-                <Txt weight={700} size={16} color={colors.amber}>
+                <Txt weight={700} size={15} color={colors.amber}>
                   ✦
                 </Txt>
-                <Txt weight={700} size={14} color={colors.ink}>
+                <Txt weight={700} size={13.5} color={colors.ink} numberOfLines={1} style={styles.flex}>
                   {s}
                 </Txt>
               </Pressable>
             ))}
           </View>
         ) : (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.suggestRow}>
-            {SUGGESTIONS.map((s) => (
-              <Pressable key={s} style={styles.suggestChip} onPress={() => send(s)}>
-                <Txt weight={700} size={13} color={colors.inkBody}>
-                  {s}
-                </Txt>
-              </Pressable>
-            ))}
-          </ScrollView>
+          <View style={styles.suggestBlock}>
+            <Txt weight={800} size={11} color={colors.textFaintAlt} style={styles.suggestLabel}>
+              SUGGESTIONS
+            </Txt>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.suggestRow}>
+              {SUGGESTIONS.map((s) => (
+                <Pressable key={s} style={styles.suggestChip} onPress={() => send(s)}>
+                  <Txt weight={700} size={12.5} color={colors.inkBody} numberOfLines={1}>
+                    {s}
+                  </Txt>
+                </Pressable>
+              ))}
+            </ScrollView>
+          </View>
         )}
 
         {/* Barre de saisie */}
@@ -319,11 +324,11 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.dividerWarm,
   },
   sujetsTitle: { marginBottom: 9, paddingLeft: 2 },
-  chipRow: { gap: 8, paddingRight: 8 },
+  chipRow: { gap: 7, paddingRight: 8 },
   subjectChip: {
     borderRadius: radius.pill,
-    paddingVertical: 9,
-    paddingHorizontal: 15,
+    paddingVertical: 7,
+    paddingHorizontal: 13,
     borderWidth: 1.5,
     borderColor: colors.border,
     backgroundColor: colors.screen,
@@ -343,7 +348,7 @@ const styles = StyleSheet.create({
   bubbleUser: { backgroundColor: colors.green, borderTopRightRadius: 6 },
   typing: { flexDirection: 'row', gap: 5, alignItems: 'center' },
   typingDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: '#bdb7ad' },
-  coachSuggestions: { paddingHorizontal: 14, paddingBottom: 8, gap: 8 },
+  coachSuggestions: { paddingHorizontal: 14, paddingBottom: 8, gap: 7 },
   coachSuggestion: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -351,18 +356,20 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: colors.border,
     backgroundColor: colors.white,
-    borderRadius: 14,
-    paddingVertical: 12,
-    paddingHorizontal: 15,
+    borderRadius: 12,
+    paddingVertical: 11,
+    paddingHorizontal: 14,
   },
-  suggestRow: { gap: 8, paddingHorizontal: 14, paddingVertical: 8 },
+  suggestBlock: { paddingTop: 4 },
+  suggestLabel: { paddingHorizontal: 16, marginBottom: 5, letterSpacing: 0.5 },
+  suggestRow: { gap: 7, paddingHorizontal: 14, paddingBottom: 8 },
   suggestChip: {
     borderRadius: radius.pill,
-    paddingVertical: 8,
-    paddingHorizontal: 13,
+    paddingVertical: 7,
+    paddingHorizontal: 12,
     borderWidth: 1.5,
     borderColor: colors.border,
-    backgroundColor: colors.white,
+    backgroundColor: colors.screen,
   },
   inputBar: {
     flexDirection: 'row',
