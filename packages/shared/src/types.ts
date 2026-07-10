@@ -158,6 +158,26 @@ export interface StoryDTO {
   text: string;
 }
 
+/* ------------------------------ Profil ------------------------------ */
+
+export interface ProfileSubjectProgressDTO {
+  subjectId: SubjectId;
+  name: string;
+  color: string;
+  /** Pourcentage de progression (0-100). */
+  pct: number;
+}
+
+/** Données agrégées du tableau de bord Profil élève. */
+export interface ProfileDTO {
+  user: UserDTO;
+  streak: number;
+  gems: number;
+  xp: number;
+  badges: BadgeDTO[];
+  progression: ProfileSubjectProgressDTO[];
+}
+
 /* ------------------------- Chat socratique -------------------------- */
 
 export type ChatRole = 'user' | 'assistant';

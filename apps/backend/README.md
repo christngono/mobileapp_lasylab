@@ -68,6 +68,8 @@ en-tête `Authorization: Bearer <accessToken>`.
 | `POST` | `/socratic/ask` | ✅ | Dialogue socratique (relance, jamais la réponse) |
 | `GET` | `/socratic/sessions` | ✅ | Sessions socratiques récentes |
 | `GET` | `/socratic/sessions/:id` | ✅ | Historique d'une session |
+| `GET` | `/stories` | ✅ | Stories de l'écran Status |
+| `GET` | `/profile/me` | ✅ | Tableau de bord (stats, badges, progression) |
 | `GET` | `/health` | — | Santé du service |
 
 ### Module socratique (Groq)

@@ -11,6 +11,8 @@ import { LessonsModule } from './modules/lessons/lessons.module';
 import { QuizModule } from './modules/quiz/quiz.module';
 import { ActivitiesModule } from './modules/activities/activities.module';
 import { SocraticModule } from './modules/socratic/socratic.module';
+import { StatusModule } from './modules/status/status.module';
+import { ProfileModule } from './modules/profile/profile.module';
 
 @Module({
   imports: [
@@ -27,7 +29,8 @@ import { SocraticModule } from './modules/socratic/socratic.module';
     QuizModule,
     ActivitiesModule,
     SocraticModule,
-    // Modules à venir : badges/status.
+    StatusModule,
+    ProfileModule,
   ],
   controllers: [HealthController],
 })

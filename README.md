@@ -63,5 +63,5 @@ n'est jamais exposée au client.
 - [x] **Étape 7** — Module Quiz & Épreuves (correction/score + écrans Quiz, Épreuves-exo, Détail)
 - [x] **Étape 8** — Module socratique + intégration Groq (clé 100 % serveur)
 - [x] **Étape 9** — Écran Chat IA "Lasy" (3 vues, saisie, suggestions) branché sur le socratique
-- [ ] Étape 10 — Statuts & progression
+- [x] **Étape 10** — Statuts & progression (Status, Profil élève + endpoints stories/profil)
 - [ ] Étape 11 — Tests & finitions

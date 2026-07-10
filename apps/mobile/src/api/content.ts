@@ -2,9 +2,11 @@ import type {
   ActivityDTO,
   LessonDTO,
   ParcoursDTO,
+  ProfileDTO,
   ProgressDTO,
   QuizDTO,
   QuizResultDTO,
+  StoryDTO,
   SubjectId,
   SubjectMeta,
 } from '@lasylab/shared';
@@ -55,5 +57,17 @@ export const activitiesApi = {
   },
   get(id: string) {
     return apiRequest<ActivityDTO>(`/activities/${id}`);
+  },
+};
+
+export const statusApi = {
+  stories() {
+    return apiRequest<StoryDTO[]>('/stories');
+  },
+};
+
+export const profileApi = {
+  get() {
+    return apiRequest<ProfileDTO>('/profile/me');
   },
 };
