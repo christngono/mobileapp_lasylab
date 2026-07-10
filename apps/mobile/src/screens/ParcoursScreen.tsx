@@ -74,8 +74,8 @@ export default function ParcoursScreen({ navigation, route }: Props) {
 }
 
 function NodeLabel({ node }: { node: ParcoursNodeDTO }) {
-  let bg = colors.dividerWarm;
-  let color = colors.textFaint;
+  let bg: string = colors.dividerWarm;
+  let color: string = colors.textFaint;
   if (node.status === 'done') {
     bg = colors.greenTint;
     color = colors.greenText;

@@ -12,8 +12,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/* ------------------------------ Enums ------------------------------ */
-
+// ------------------------------ Enums ------------------------------
 enum UserRole {
   STUDENT
   PARENT
@@ -37,8 +36,7 @@ enum ActivityCategory {
   EXERCICE
 }
 
-/* --------------------------- Utilisateurs -------------------------- */
-
+// --------------------------- Utilisateurs --------------------------
 model User {
   id           String   @id @default(cuid())
   role         UserRole @default(STUDENT)
@@ -73,8 +71,7 @@ model User {
   @@index([parentId])
 }
 
-/* ----------------------------- Matières ---------------------------- */
-
+// ----------------------------- Matières ----------------------------
 model Subject {
   id       String @id // slug : "maths", "francais", ...
   name     String
@@ -91,8 +88,7 @@ model Subject {
   createdAt DateTime @default(now())
 }
 
-/* ------------------------- Leçons & parcours ----------------------- */
-
+// ------------------------- Leçons & parcours -----------------------
 // Un nœud de type INTRO ou LESSON du parcours d'une matière.
 model Lesson {
   id        String   @id @default(cuid())
@@ -123,8 +119,7 @@ model LessonSlide {
   @@index([lessonId])
 }
 
-/* ------------------------------ Quiz ------------------------------- */
-
+// ------------------------------ Quiz -------------------------------
 // Un nœud de type QUIZ du parcours d'une matière.
 model Quiz {
   id        String  @id @default(cuid())
@@ -170,8 +165,7 @@ model QuizResult {
   @@index([quizId])
 }
 
-/* -------------------------- Progression ---------------------------- */
-
+// -------------------------- Progression ----------------------------
 // Progression d'un élève sur une matière (nombre de nœuds validés).
 model Progress {
   id             String  @id @default(cuid())
@@ -187,8 +181,7 @@ model Progress {
   @@index([userId])
 }
 
-/* ----------------------------- Badges ------------------------------ */
-
+// ----------------------------- Badges ------------------------------
 model Badge {
   id    String @id @default(cuid())
   code  String @unique // identifiant stable : "first_quiz", "streak_5", ...
@@ -211,8 +204,7 @@ model UserBadge {
   @@index([userId])
 }
 
-/* ----------------------- Sessions socratiques ---------------------- */
-
+// ----------------------- Sessions socratiques ----------------------
 model SocraticSession {
   id        String   @id @default(cuid())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -239,8 +231,7 @@ model SocraticMessage {
   @@index([sessionId])
 }
 
-/* ----------------------- Activités / Épreuves ---------------------- */
-
+// ----------------------- Activités / Épreuves ----------------------
 // Écran "Épreuves-exo" : méthodes, définitions, épreuves, exercices.
 model Activity {
   id           String           @id @default(cuid())
@@ -255,8 +246,7 @@ model Activity {
   createdAt DateTime @default(now())
 }
 
-/* ------------------------- Stories / Status ------------------------ */
-
+// ------------------------- Stories / Status ------------------------
 model Story {
   id    String @id @default(cuid())
   bg    String // dégradé CSS repris du design

@@ -37,7 +37,9 @@ export class ProfileService {
     }));
 
     // Progression par matière (pourcentage).
-    const progressBySubject = new Map(user.progress.map((p) => [p.subjectId, p.completedNodes]));
+    const progressBySubject = new Map<string, number>(
+      user.progress.map((p) => [p.subjectId, p.completedNodes] as [string, number]),
+    );
     const progression: ProfileSubjectProgressDTO[] = SUBJECTS.map((s) => ({
       subjectId: s.id,
       name: s.name,

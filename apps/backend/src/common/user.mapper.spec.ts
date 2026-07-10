@@ -32,7 +32,7 @@ describe('user.mapper', () => {
 
   it("n'expose jamais le hash du mot de passe", () => {
     const dto = toUserDTO(makeUser());
-    expect((dto as Record<string, unknown>).passwordHash).toBeUndefined();
+    expect((dto as unknown as Record<string, unknown>).passwordHash).toBeUndefined();
   });
 
   it('sérialise la date de création en ISO', () => {

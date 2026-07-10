@@ -132,7 +132,7 @@ export default function QuizScreen({ navigation, route }: Props) {
             <QuizOption
               key={idx}
               label={opt}
-              state={optionState(idx, selected, checked, question.correctIndex)}
+              state={optionState(idx, selected, checked, question.correctIndex ?? -1)}
               onPress={() => {
                 if (!checked) setSelected(idx);
               }}

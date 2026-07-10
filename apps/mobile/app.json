@@ -13,7 +13,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.lasylab.app"
@@ -26,7 +28,7 @@
       }
     },
     "extra": {
-      "apiUrl": "http://localhost:3000/api"
+      "apiUrl": "http://192.168.1.208:3333/api"
     }
   }
 }

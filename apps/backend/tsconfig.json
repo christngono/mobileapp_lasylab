@@ -12,9 +12,9 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
     "noImplicitAny": false,
-    "paths": {
-      "@lasylab/shared": ["../../packages/shared/src"]
-    }
+    // Pas de mapping paths ici : @lasylab/shared est résolu via node_modules
+    // (paquet compilé), pour garder une sortie dist plate (dist/main.js).
+    "paths": {}
   },
   "include": ["src/**/*", "prisma/**/*"]
 }
