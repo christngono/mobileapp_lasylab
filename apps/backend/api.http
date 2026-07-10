@@ -47,3 +47,27 @@ Authorization: Bearer <TOKEN>
 ### Progression
 GET http://localhost:3000/api/progress/me
 Authorization: Bearer <TOKEN>
+
+### Dialogue socratique (1er message → crée une session)
+POST http://localhost:3000/api/socratic/ask
+Authorization: Bearer <TOKEN>
+Content-Type: application/json
+
+{
+  "subjectId": "maths",
+  "message": "Comment on résout une équation du second degré ?"
+}
+
+### Dialogue socratique (suite, réutiliser sessionId retourné)
+POST http://localhost:3000/api/socratic/ask
+Authorization: Bearer <TOKEN>
+Content-Type: application/json
+
+{
+  "sessionId": "<SESSION_ID>",
+  "message": "Je crois qu'il faut calculer le discriminant ?"
+}
+
+### Sessions socratiques
+GET http://localhost:3000/api/socratic/sessions
+Authorization: Bearer <TOKEN>

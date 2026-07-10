@@ -65,7 +65,22 @@ en-tête `Authorization: Bearer <accessToken>`.
 | `POST` | `/quiz/submit` | ✅ | Correction (score, XP, progression, badge) |
 | `GET` | `/activities` | ✅ | Liste des activités (épreuves-exo) |
 | `GET` | `/activities/:id` | ✅ | Détail d'une activité |
+| `POST` | `/socratic/ask` | ✅ | Dialogue socratique (relance, jamais la réponse) |
+| `GET` | `/socratic/sessions` | ✅ | Sessions socratiques récentes |
+| `GET` | `/socratic/sessions/:id` | ✅ | Historique d'une session |
 | `GET` | `/health` | — | Santé du service |
+
+### Module socratique (Groq)
+
+Le module `socratic` interroge **Groq** (API compatible OpenAI) via le SDK
+`openai`, avec un *system prompt* strict : l'IA **ne donne jamais la réponse
+directement** et guide l'élève par des questions successives (contexte
+multi-tours persisté dans `SocraticSession`/`SocraticMessage`).
+
+La clé `GROQ_API_KEY` est lue **uniquement côté serveur** (`.env`) et n'est
+jamais renvoyée au client. Sans clé configurée, le module bascule en **mode
+dégradé** (relance socratique de secours) pour rester fonctionnel en
+développement.
 
 Auth : **JWT** (HS256, secret `JWT_SECRET`) + mots de passe hachés **bcrypt**.
 Exemples de requêtes dans [`api.http`](api.http).

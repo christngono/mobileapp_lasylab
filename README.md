@@ -61,7 +61,7 @@ n'est jamais exposée au client.
 - [x] **Étape 5** — Flux onboarding (splash → carrousel → inscription/connexion → profil/classe/objectif) branché sur l'API
 - [x] **Étape 6** — Module Leçons (Études, Parcours, Cours, Leçon-stories + endpoints contenu)
 - [x] **Étape 7** — Module Quiz & Épreuves (correction/score + écrans Quiz, Épreuves-exo, Détail)
-- [ ] Étape 8 — Module socratique + Groq
+- [x] **Étape 8** — Module socratique + intégration Groq (clé 100 % serveur)
 - [ ] Étape 9 — Écran Chat IA "Lasy"
 - [ ] Étape 10 — Statuts & progression
 - [ ] Étape 11 — Tests & finitions

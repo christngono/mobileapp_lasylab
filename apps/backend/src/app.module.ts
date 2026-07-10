@@ -10,6 +10,7 @@ import { ProgressModule } from './modules/progress/progress.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
 import { QuizModule } from './modules/quiz/quiz.module';
 import { ActivitiesModule } from './modules/activities/activities.module';
+import { SocraticModule } from './modules/socratic/socratic.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { ActivitiesModule } from './modules/activities/activities.module';
     LessonsModule,
     QuizModule,
     ActivitiesModule,
-    // Modules à venir : socratic, badges/status.
+    SocraticModule,
+    // Modules à venir : badges/status.
   ],
   controllers: [HealthController],
 })
