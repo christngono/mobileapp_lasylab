@@ -11,6 +11,7 @@ import ChooseProfileScreen from '../screens/ChooseProfileScreen';
 import CongratulationsScreen from '../screens/CongratulationsScreen';
 import ChooseClasseScreen from '../screens/ChooseClasseScreen';
 import ChooseObjectifScreen from '../screens/ChooseObjectifScreen';
+import ParentHomeScreen from '../screens/ParentHomeScreen';
 import ParcoursScreen from '../screens/ParcoursScreen';
 import CoursScreen from '../screens/CoursScreen';
 import LessonScreen from '../screens/LessonScreen';
@@ -27,13 +28,13 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
  * à l'étape 5.
  */
 export function RootNavigator() {
-  const { isAuthenticated } = useSession();
+  const { isAuthenticated, account, isChildActive } = useSession();
+  // Un parent (qui n'agit pas encore comme un enfant) démarre sur l'accueil parent.
+  const isParentHome = isAuthenticated && account?.role === 'parent' && !isChildActive;
+  const initialRoute = !isAuthenticated ? 'Splash' : isParentHome ? 'ParentHome' : 'Main';
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName={isAuthenticated ? 'Main' : 'Splash'}
-        screenOptions={{ headerShown: false }}
-      >
+      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="ChooseProfile" component={ChooseProfileScreen} />
@@ -42,6 +43,7 @@ export function RootNavigator() {
         <Stack.Screen name="Congratulations" component={CongratulationsScreen} />
         <Stack.Screen name="ChooseClasse" component={ChooseClasseScreen} />
         <Stack.Screen name="ChooseObjectif" component={ChooseObjectifScreen} />
+        <Stack.Screen name="ParentHome" component={ParentHomeScreen} />
         <Stack.Screen name="Main" component={MainTabs} />
         <Stack.Screen name="Parcours" component={ParcoursScreen} />
         <Stack.Screen name="Cours" component={CoursScreen} />

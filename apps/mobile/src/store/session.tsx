@@ -10,39 +10,47 @@ import {
 import * as SecureStore from 'expo-secure-store';
 import type { LoginDTO, RegisterDTO, UserDTO } from '@lasylab/shared';
 import { authApi, type UpdateProfilePayload } from '../api/auth';
+import { childrenApi } from '../api/children';
 import { setAuthToken } from '../api/client';
 
 const TOKEN_KEY = 'lasylab.token';
 
 interface SessionContextValue {
+  /** Identité active (le parent, ou l'enfant sélectionné). */
   user: UserDTO | null;
+  /** Compte réellement connecté (le parent, même en mode enfant). */
+  account: UserDTO | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  register: (payload: RegisterDTO) => Promise<void>;
-  login: (payload: LoginDTO) => Promise<void>;
+  /** Vrai quand un parent agit au nom d'un de ses enfants. */
+  isChildActive: boolean;
+  register: (payload: RegisterDTO) => Promise<UserDTO>;
+  login: (payload: LoginDTO) => Promise<UserDTO>;
   logout: () => Promise<void>;
   updateProfile: (payload: UpdateProfilePayload) => Promise<UserDTO>;
   refresh: () => Promise<void>;
+  enterAsChild: (childId: string) => Promise<void>;
+  exitToParent: () => void;
 }
 
 const SessionContext = createContext<SessionContextValue | undefined>(undefined);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<UserDTO | null>(null);
+  const [account, setAccount] = useState<UserDTO | null>(null);
+  const [childUser, setChildUser] = useState<UserDTO | null>(null);
+  const [accountToken, setAccountToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Restaure la session au démarrage.
   useEffect(() => {
     (async () => {
       try {
         const token = await SecureStore.getItemAsync(TOKEN_KEY);
         if (token) {
           setAuthToken(token);
-          const me = await authApi.me();
-          setUser(me);
+          setAccountToken(token);
+          setAccount(await authApi.me());
         }
       } catch {
-        // Jeton invalide/expiré : on repart déconnecté.
         setAuthToken(null);
         await SecureStore.deleteItemAsync(TOKEN_KEY).catch(() => {});
       } finally {
@@ -53,6 +61,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const persistToken = useCallback(async (token: string) => {
     setAuthToken(token);
+    setAccountToken(token);
     await SecureStore.setItemAsync(TOKEN_KEY, token);
   }, []);
 
@@ -60,7 +69,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     async (payload: RegisterDTO) => {
       const res = await authApi.register(payload);
       await persistToken(res.accessToken);
-      setUser(res.user);
+      setChildUser(null);
+      setAccount(res.user);
+      return res.user;
     },
     [persistToken],
   );
@@ -69,40 +80,67 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     async (payload: LoginDTO) => {
       const res = await authApi.login(payload);
       await persistToken(res.accessToken);
-      setUser(res.user);
+      setChildUser(null);
+      setAccount(res.user);
+      return res.user;
     },
     [persistToken],
   );
 
   const logout = useCallback(async () => {
     setAuthToken(null);
-    setUser(null);
+    setAccount(null);
+    setChildUser(null);
+    setAccountToken(null);
     await SecureStore.deleteItemAsync(TOKEN_KEY).catch(() => {});
   }, []);
 
-  const updateProfile = useCallback(async (payload: UpdateProfilePayload) => {
-    const updated = await authApi.updateProfile(payload);
-    setUser(updated);
-    return updated;
-  }, []);
+  const updateProfile = useCallback(
+    async (payload: UpdateProfilePayload) => {
+      const updated = await authApi.updateProfile(payload);
+      // Met à jour l'identité active (parent ou enfant).
+      setChildUser((c) => (c ? updated : c));
+      setAccount((a) => (childUser ? a : updated));
+      return updated;
+    },
+    [childUser],
+  );
 
   const refresh = useCallback(async () => {
     const me = await authApi.me();
-    setUser(me);
+    if (childUser) setChildUser(me);
+    else setAccount(me);
+  }, [childUser]);
+
+  /** Le parent « entre » dans l'app au nom d'un enfant (jeton dédié en mémoire). */
+  const enterAsChild = useCallback(async (childId: string) => {
+    const res = await childrenApi.token(childId);
+    setAuthToken(res.accessToken); // jeton enfant (non persisté : le parent reste le compte enregistré)
+    setChildUser(res.user);
   }, []);
+
+  /** Retour au compte parent. */
+  const exitToParent = useCallback(() => {
+    setAuthToken(accountToken);
+    setChildUser(null);
+  }, [accountToken]);
 
   const value = useMemo<SessionContextValue>(
     () => ({
-      user,
+      user: childUser ?? account,
+      account,
       isLoading,
-      isAuthenticated: !!user,
+      isAuthenticated: !!account,
+      isChildActive: !!childUser,
       register,
       login,
       logout,
       updateProfile,
       refresh,
+      enterAsChild,
+      exitToParent,
     }),
-    [user, isLoading, register, login, logout, updateProfile, refresh],
+    [childUser, account, isLoading, register, login, logout, updateProfile, refresh, enterAsChild, exitToParent],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

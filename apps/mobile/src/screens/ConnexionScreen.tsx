@@ -24,8 +24,9 @@ export default function ConnexionScreen({ navigation }: Props) {
     }
     setLoading(true);
     try {
-      await login({ phone: phone.trim(), password });
-      navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
+      const user = await login({ phone: phone.trim(), password });
+      const target = user.role === 'parent' ? 'ParentHome' : 'Main';
+      navigation.reset({ index: 0, routes: [{ name: target }] });
     } catch (e) {
       setError(e instanceof ApiError ? e.message : 'Une erreur est survenue.');
     } finally {

@@ -84,7 +84,7 @@ export default function InscriptionScreen({ navigation, route }: Props) {
       });
 
       if (role === 'parent') {
-        navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
+        navigation.reset({ index: 0, routes: [{ name: 'ParentHome' }] });
       } else {
         navigation.navigate('Congratulations', { role });
       }

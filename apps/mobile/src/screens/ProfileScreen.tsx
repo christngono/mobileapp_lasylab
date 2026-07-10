@@ -16,7 +16,7 @@ const BADGE_TINTS = ['#FFF6DB', '#FDEAE0', '#EDEAFB', '#E8F8DC'];
 const BADGE_BORDERS = ['#FFE08A', '#F6C3A8', '#C8BFF0', '#B6E89A'];
 
 export default function ProfileScreen({ navigation }: Props) {
-  const { user, logout } = useSession();
+  const { user, logout, isChildActive, exitToParent } = useSession();
   const { data, loading, error, reload } = useAsync(() => profileApi.get(), []);
 
   const initial = (data?.user.name ?? user?.name ?? 'L').charAt(0).toUpperCase();
@@ -24,6 +24,11 @@ export default function ProfileScreen({ navigation }: Props) {
   const onLogout = async () => {
     await logout();
     navigation.reset({ index: 0, routes: [{ name: 'Splash' }] });
+  };
+
+  const onSwitchProfile = () => {
+    exitToParent();
+    navigation.reset({ index: 0, routes: [{ name: 'ParentHome' }] });
   };
 
   if (loading && !data) {
@@ -81,11 +86,19 @@ export default function ProfileScreen({ navigation }: Props) {
           ))}
         </View>
 
-        <Pressable style={styles.logout} onPress={onLogout}>
-          <Txt weight={800} size={15} color={colors.redText}>
-            Se déconnecter
-          </Txt>
-        </Pressable>
+        {isChildActive ? (
+          <Pressable style={styles.switchProfile} onPress={onSwitchProfile}>
+            <Txt weight={800} size={15} color={colors.blueText}>
+              ← Changer de profil
+            </Txt>
+          </Pressable>
+        ) : (
+          <Pressable style={styles.logout} onPress={onLogout}>
+            <Txt weight={800} size={15} color={colors.redText}>
+              Se déconnecter
+            </Txt>
+          </Pressable>
+        )}
       </ScrollView>
     </Screen>
   );
@@ -183,4 +196,5 @@ const styles = StyleSheet.create({
   progressList: { paddingHorizontal: 22, gap: 14, paddingBottom: 10 },
   progressHead: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
   logout: { alignItems: 'center', paddingVertical: 22 },
+  switchProfile: { alignItems: 'center', paddingVertical: 22 },
 });

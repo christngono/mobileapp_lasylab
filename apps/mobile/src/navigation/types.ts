@@ -19,6 +19,7 @@ export type RootStackParamList = {
   Congratulations: { role: UserRole };
   ChooseClasse: { role: UserRole };
   ChooseObjectif: { role: UserRole };
+  ParentHome: undefined;
   Main: NavigatorScreenParams<MainTabsParamList> | undefined;
   Parcours: { subjectId: SubjectId };
   Cours: { subjectId: SubjectId; nodeIndex: number };
