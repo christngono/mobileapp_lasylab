@@ -18,6 +18,7 @@
     "mobile:android": "npm run android --workspace @lasylab/mobile",
     "mobile:ios": "npm run ios --workspace @lasylab/mobile",
     "build": "npm run shared:build && npm run backend:build",
+    "test": "npm run test --workspace @lasylab/backend && npm run test --workspace @lasylab/mobile",
     "clean": "rimraf 'apps/*/node_modules' 'packages/*/node_modules' node_modules"
   },
   "devDependencies": {

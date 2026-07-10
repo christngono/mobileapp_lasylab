@@ -4,6 +4,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { QuizResultDTO } from '@lasylab/shared';
 import { quizApi } from '../api/content';
 import { useAsync } from '../hooks/useAsync';
+import { optionState, type OptState } from '../utils/quiz';
 import { Screen, Txt, Button, Mascot, CloseIcon, ProgressBar, LoadingView, ErrorView } from '../components';
 import { colors, radius } from '../theme';
 import type { RootStackParamList } from '../navigation/types';
@@ -157,15 +158,6 @@ export default function QuizScreen({ navigation, route }: Props) {
       </View>
     </Screen>
   );
-}
-
-type OptState = 'idle' | 'selected' | 'correct' | 'wrong' | 'muted';
-
-function optionState(idx: number, selected: number | null, checked: boolean, correct: number): OptState {
-  if (!checked) return idx === selected ? 'selected' : 'idle';
-  if (idx === correct) return 'correct';
-  if (idx === selected) return 'wrong';
-  return 'muted';
 }
 
 function QuizOption({ label, state, onPress }: { label: string; state: OptState; onPress: () => void }) {

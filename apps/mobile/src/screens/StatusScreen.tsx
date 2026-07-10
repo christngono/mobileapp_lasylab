@@ -7,17 +7,11 @@ import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { statusApi } from '../api/content';
 import { useAsync } from '../hooks/useAsync';
 import { Screen, Txt, Mascot, CloseIcon, PlayIcon, LoadingView, ErrorView } from '../components';
+import { parseGradient } from '../utils/gradient';
 import { colors } from '../theme';
 import type { MainTabsParamList } from '../navigation/types';
 
 const AUTO_MS = 4500;
-
-/** Extrait les deux couleurs d'un dégradé CSS `linear-gradient(...,#aaa,#bbb)`. */
-function parseGradient(bg: string): [string, string] {
-  const hex = bg.match(/#[0-9A-Fa-f]{6}/g);
-  if (hex && hex.length >= 2) return [hex[0], hex[1]];
-  return ['#29ABE2', '#1E8FC4'];
-}
 
 export default function StatusScreen() {
   const navigation = useNavigation<BottomTabNavigationProp<MainTabsParamList>>();

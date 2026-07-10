@@ -64,4 +64,13 @@ n'est jamais exposée au client.
 - [x] **Étape 8** — Module socratique + intégration Groq (clé 100 % serveur)
 - [x] **Étape 9** — Écran Chat IA "Lasy" (3 vues, saisie, suggestions) branché sur le socratique
 - [x] **Étape 10** — Statuts & progression (Status, Profil élève + endpoints stories/profil)
-- [ ] Étape 11 — Tests & finitions
+- [x] **Étape 11** — Tests (backend + mobile) & guide de déploiement
+
+Voir [DEPLOYMENT.md](DEPLOYMENT.md) pour la mise en production.
+
+## Tests
+
+```bash
+npm run test --workspace @lasylab/backend   # logique métier (auth, quiz, progression, socratique)
+npm run test --workspace @lasylab/mobile    # utilitaires purs
+```
