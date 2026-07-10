@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
   KeyboardAvoidingView,
-  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -12,19 +11,27 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SUBJECTS, type SubjectId } from '@lasylab/shared';
 import { ApiError } from '../api/client';
 import { useSession } from '../store/session';
-import { Screen, Logo, Button, Txt, TextField, ChevronDown, CheckIcon } from '../components';
+import { Screen, Logo, Button, Txt, TextField, PickerField, CheckIcon } from '../components';
+import type { PickerOption } from '../components/PickerField';
 import { colors, radius } from '../theme';
 import type { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Inscription'>;
-
-const YEARS = Array.from({ length: 14 }, (_, i) => 2016 - i);
 
 const ROLE_LABEL: Record<string, string> = {
   student: 'Élève',
   teacher: 'Enseignant',
   parent: 'Parent',
 };
+
+const pad2 = (n: number) => String(n).padStart(2, '0');
+const DAY_OPTIONS: PickerOption[] = Array.from({ length: 31 }, (_, i) => ({ label: String(i + 1), value: pad2(i + 1) }));
+const MONTH_NAMES = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+const MONTH_OPTIONS: PickerOption[] = MONTH_NAMES.map((label, i) => ({ label, value: pad2(i + 1) }));
+const YEAR_OPTIONS: PickerOption[] = Array.from({ length: 25 }, (_, i) => {
+  const y = new Date().getFullYear() - 4 - i; // à partir d'il y a ~4 ans
+  return { label: String(y), value: String(y) };
+});
 
 export default function InscriptionScreen({ navigation, route }: Props) {
   const { role } = route.params;
@@ -33,11 +40,12 @@ export default function InscriptionScreen({ navigation, route }: Props) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  // Élève
-  const [birthYear, setBirthYear] = useState<number | null>(null);
+  // Élève — date de naissance (jour / mois / année)
+  const [day, setDay] = useState<string | null>(null);
+  const [month, setMonth] = useState<string | null>(null);
+  const [year, setYear] = useState<string | null>(null);
   const [school, setSchool] = useState('');
   const [consent, setConsent] = useState(false);
-  const [yearOpen, setYearOpen] = useState(false);
   // Enseignant
   const [subjects, setSubjects] = useState<SubjectId[]>([]);
   const [schoolsText, setSchoolsText] = useState('');
@@ -73,7 +81,12 @@ export default function InscriptionScreen({ navigation, route }: Props) {
         password,
         role,
         consent,
-        ...(role === 'student' ? { birthYear: birthYear ?? undefined, school: school.trim() || undefined } : {}),
+        ...(role === 'student'
+          ? {
+              birthDate: day && month && year ? `${year}-${month}-${day}` : undefined,
+              school: school.trim() || undefined,
+            }
+          : {}),
         ...(role === 'teacher'
           ? {
               subjects,
@@ -122,12 +135,11 @@ export default function InscriptionScreen({ navigation, route }: Props) {
                 <Txt weight={800} size={13} color={colors.textMuted} style={styles.selLabel}>
                   Date de naissance
                 </Txt>
-                <Pressable style={styles.select} onPress={() => setYearOpen(true)}>
-                  <Txt weight={700} size={14} color={birthYear ? colors.ink : colors.textMuted}>
-                    {birthYear ? String(birthYear) : 'Sélectionne une année'}
-                  </Txt>
-                  <ChevronDown />
-                </Pressable>
+                <View style={styles.dateRow}>
+                  <PickerField placeholder="Jour" title="Jour" value={day} options={DAY_OPTIONS} onSelect={setDay} containerStyle={styles.dateCol} />
+                  <PickerField placeholder="Mois" title="Mois" value={month} options={MONTH_OPTIONS} onSelect={setMonth} containerStyle={styles.dateColWide} />
+                  <PickerField placeholder="Année" title="Année" value={year} options={YEAR_OPTIONS} onSelect={setYear} containerStyle={styles.dateCol} />
+                </View>
                 <TextField label="École" placeholder="Nom de ton école" value={school} onChangeText={setSchool} containerStyle={styles.field} />
               </>
             )}
@@ -205,27 +217,6 @@ export default function InscriptionScreen({ navigation, route }: Props) {
           </Txt>
         </ScrollView>
       </KeyboardAvoidingView>
-
-      {/* Sélecteur d'année (élève) */}
-      <Modal visible={yearOpen} transparent animationType="fade" onRequestClose={() => setYearOpen(false)}>
-        <Pressable style={styles.modalBackdrop} onPress={() => setYearOpen(false)}>
-          <View style={styles.modalSheet}>
-            <Txt family="baloo" weight={800} size={18} color={colors.ink} align="center" style={styles.modalTitle}>
-              Année de naissance
-            </Txt>
-            <ScrollView>
-              {YEARS.map((y) => (
-                <Pressable key={y} style={styles.yearItem} onPress={() => { setBirthYear(y); setYearOpen(false); }}>
-                  <Txt weight={birthYear === y ? 800 : 700} size={16} color={birthYear === y ? colors.blue : colors.ink}>
-                    {y}
-                  </Txt>
-                  {birthYear === y ? <CheckIcon size={18} color={colors.blue} /> : null}
-                </Pressable>
-              ))}
-            </ScrollView>
-          </View>
-        </Pressable>
-      </Modal>
     </Screen>
   );
 }
@@ -246,16 +237,9 @@ const styles = StyleSheet.create({
   },
   field: { marginTop: 14 },
   selLabel: { marginTop: 14, marginBottom: 5, marginLeft: 6 },
-  select: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: radius.pill,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
+  dateRow: { flexDirection: 'row', gap: 8 },
+  dateCol: { flex: 1 },
+  dateColWide: { flex: 1.4 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chip: { paddingVertical: 9, paddingHorizontal: 14, borderRadius: radius.pill, borderWidth: 1.5 },
   chipOn: { backgroundColor: colors.blue, borderColor: colors.blue },
@@ -268,22 +252,4 @@ const styles = StyleSheet.create({
   error: { marginTop: 14 },
   submit: { marginTop: 20 },
   loginRow: { marginVertical: 14 },
-  modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,.35)', justifyContent: 'flex-end' },
-  modalSheet: {
-    backgroundColor: colors.white,
-    borderTopLeftRadius: radius.cardLg,
-    borderTopRightRadius: radius.cardLg,
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    maxHeight: '60%',
-  },
-  modalTitle: { marginBottom: 12 },
-  yearItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-  },
 });

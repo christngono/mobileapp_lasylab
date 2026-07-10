@@ -42,7 +42,7 @@ export class AuthService {
         role,
         consent: dto.consent ?? false,
         // Élève
-        birthYear: role === 'STUDENT' ? (dto.birthYear ?? null) : null,
+        birthDate: role === 'STUDENT' && dto.birthDate ? new Date(dto.birthDate) : null,
         school: role === 'STUDENT' ? (dto.school ?? null) : null,
         // Enseignant
         subjects: role === 'TEACHER' ? (dto.subjects ?? []) : [],

@@ -1,4 +1,4 @@
-import { IsArray, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsArray, IsDateString, IsIn, IsOptional, IsString } from 'class-validator';
 import { CLASSES, SUBJECTS, type Classe, type SubjectId } from '@lasylab/shared';
 
 const CLASSE_VALUES = CLASSES as unknown as string[];
@@ -20,10 +20,8 @@ export class UpdateProfileDto {
   classe?: Classe;
 
   @IsOptional()
-  @IsInt()
-  @Min(1950)
-  @Max(new Date().getFullYear())
-  birthYear?: number;
+  @IsDateString()
+  birthDate?: string;
 
   @IsOptional()
   @IsString()

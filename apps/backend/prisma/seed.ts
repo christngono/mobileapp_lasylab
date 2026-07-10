@@ -181,7 +181,7 @@ async function seedDemoUser() {
       passwordHash,
       classe: '1ère',
       objectifs: ['Augmenter mes notes'],
-      birthYear: 2008,
+      birthDate: new Date('2008-05-14'),
       school: 'Lycée Lasylab',
       consent: true,
       streak: 5,

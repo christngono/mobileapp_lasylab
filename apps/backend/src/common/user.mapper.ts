@@ -9,7 +9,7 @@ export function toUserDTO(user: User): UserDTO {
     name: user.name,
     firstName: user.firstName,
     phone: user.phone,
-    birthYear: user.birthYear,
+    birthDate: user.birthDate ? user.birthDate.toISOString().slice(0, 10) : null,
     school: user.school,
     classe: (user.classe as Classe | null) ?? null,
     objectifs: user.objectifs,

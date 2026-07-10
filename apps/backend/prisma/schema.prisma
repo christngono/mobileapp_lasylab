@@ -46,7 +46,7 @@ model User {
   // Optionnels : un compte enfant n'a ni téléphone ni mot de passe (accès via le parent).
   phone        String?  @unique
   passwordHash String?
-  birthYear    Int?
+  birthDate    DateTime? // date de naissance (élève)
   school       String? // école (élève, unique)
   classe       String? // classe actuelle (élève) — voir CLASSES dans @lasylab/shared
   consent      Boolean  @default(false)

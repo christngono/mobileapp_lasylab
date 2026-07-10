@@ -9,7 +9,8 @@ export interface UserDTO {
   name: string;
   firstName?: string | null;
   phone?: string | null;
-  birthYear?: number | null;
+  /** Date de naissance au format ISO « YYYY-MM-DD » (élève). */
+  birthDate?: string | null;
   /** École (élève, unique). */
   school?: string | null;
   /** Classe actuelle (élève, unique). */
@@ -39,7 +40,7 @@ export interface RegisterDTO {
   role?: UserRole;
   consent?: boolean;
   // Élève
-  birthYear?: number;
+  birthDate?: string; // ISO « YYYY-MM-DD »
   school?: string;
   // Enseignant
   subjects?: SubjectId[];

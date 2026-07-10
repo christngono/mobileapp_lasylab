@@ -9,7 +9,7 @@ function makeUser(overrides: Partial<User> = {}): User {
     firstName: null,
     phone: '+22900000000',
     passwordHash: 'hash',
-    birthYear: 2008,
+    birthDate: new Date('2008-05-14T00:00:00.000Z'),
     school: null,
     classe: '1ère',
     consent: true,

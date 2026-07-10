@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsBoolean,
+  IsDateString,
   IsIn,
   IsInt,
   IsOptional,
@@ -40,10 +41,8 @@ export class RegisterDto implements RegisterDTO {
 
   // Élève
   @IsOptional()
-  @IsInt()
-  @Min(1950)
-  @Max(new Date().getFullYear())
-  birthYear?: number;
+  @IsDateString()
+  birthDate?: string;
 
   @IsOptional()
   @IsString()

@@ -10,7 +10,7 @@ export interface UpdateProfilePayload {
   name?: string;
   firstName?: string;
   classe?: string;
-  birthYear?: number;
+  birthDate?: string;
   school?: string;
   objectifs?: string[];
   classes?: string[];

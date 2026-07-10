@@ -34,7 +34,7 @@ export class UsersService {
         ...(dto.name !== undefined ? { name: dto.name } : {}),
         ...(dto.firstName !== undefined ? { firstName: dto.firstName } : {}),
         ...(dto.classe !== undefined ? { classe: dto.classe } : {}),
-        ...(dto.birthYear !== undefined ? { birthYear: dto.birthYear } : {}),
+        ...(dto.birthDate !== undefined ? { birthDate: new Date(dto.birthDate) } : {}),
         ...(dto.school !== undefined ? { school: dto.school } : {}),
         ...(dto.objectifs !== undefined ? { objectifs: dto.objectifs } : {}),
         ...(dto.classes !== undefined ? { classes: dto.classes } : {}),
