@@ -58,7 +58,7 @@ export default function OnboardingScreen({ navigation }: Props) {
   const isLast = index === SLIDES.length - 1;
 
   const next = () => {
-    if (isLast) navigation.navigate('Inscription');
+    if (isLast) navigation.navigate('ChooseProfile');
     else setIndex((i) => i + 1);
   };
   const prev = () => setIndex((i) => Math.max(0, i - 1));

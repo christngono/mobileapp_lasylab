@@ -9,20 +9,32 @@ import type { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseClasse'>;
 
-export default function ChooseClasseScreen({ navigation }: Props) {
+export default function ChooseClasseScreen({ navigation, route }: Props) {
+  const { role } = route.params;
+  const isTeacher = role === 'teacher';
   const { updateProfile } = useSession();
-  const [classe, setClasse] = useState<Classe>('1ère');
+  // Élève : une seule classe. Enseignant : plusieurs.
+  const [selected, setSelected] = useState<Classe[]>(isTeacher ? [] : ['1ère']);
   const [loading, setLoading] = useState(false);
 
+  const toggle = (c: Classe) => {
+    if (isTeacher) {
+      setSelected((s) => (s.includes(c) ? s.filter((x) => x !== c) : [...s, c]));
+    } else {
+      setSelected([c]);
+    }
+  };
+
   const next = async () => {
+    if (selected.length === 0) return;
     setLoading(true);
     try {
-      await updateProfile({ classe });
+      await updateProfile(isTeacher ? { classes: selected } : { classe: selected[0] });
     } catch {
-      // On continue le parcours même si l'enregistrement échoue (réseau).
+      // On continue même si l'enregistrement échoue (réseau).
     } finally {
       setLoading(false);
-      navigation.navigate('ChooseObjectif');
+      navigation.navigate('ChooseObjectif', { role });
     }
   };
 
@@ -36,20 +48,25 @@ export default function ChooseClasseScreen({ navigation }: Props) {
           <Logo height={34} />
         </View>
         <Txt family="baloo" weight={800} size={26} color={colors.inkTitle} align="center" style={styles.h1}>
-          Crée ton compte
+          {isTeacher ? 'Tes classes' : 'Ta classe'}
         </Txt>
         <Txt weight={800} size={16} color={colors.inkMuted} align="center" lineHeight={22} style={styles.sub}>
-          En quelle classe es-tu{'\n'}[2021-2022]
+          {isTeacher ? 'Quelles classes enseignes-tu ?\n(plusieurs possibles)' : 'En quelle classe es-tu ?'}
         </Txt>
 
         <View style={styles.grid}>
           {CLASSES.map((c) => (
-            <Pill key={c} label={c} selected={classe === c} onPress={() => setClasse(c)} />
+            <Pill key={c} label={c} selected={selected.includes(c)} onPress={() => toggle(c)} />
           ))}
         </View>
 
         <View style={styles.spacer} />
-        <Button label={loading ? '…' : 'Continuer'} disabled={loading} onPress={next} style={styles.cta} />
+        <Button
+          label={loading ? '…' : 'Continuer'}
+          disabled={loading || selected.length === 0}
+          onPress={next}
+          style={styles.cta}
+        />
       </View>
     </Screen>
   );

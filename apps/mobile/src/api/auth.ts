@@ -10,9 +10,12 @@ export interface UpdateProfilePayload {
   name?: string;
   firstName?: string;
   classe?: string;
-  objectif?: string;
   birthYear?: number;
   school?: string;
+  objectifs?: string[];
+  classes?: string[];
+  subjects?: string[];
+  schools?: string[];
 }
 
 export const authApi = {

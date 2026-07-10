@@ -8,6 +8,7 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import InscriptionScreen from '../screens/InscriptionScreen';
 import ConnexionScreen from '../screens/ConnexionScreen';
 import ChooseProfileScreen from '../screens/ChooseProfileScreen';
+import CongratulationsScreen from '../screens/CongratulationsScreen';
 import ChooseClasseScreen from '../screens/ChooseClasseScreen';
 import ChooseObjectifScreen from '../screens/ChooseObjectifScreen';
 import ParcoursScreen from '../screens/ParcoursScreen';
@@ -35,9 +36,10 @@ export function RootNavigator() {
       >
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen name="ChooseProfile" component={ChooseProfileScreen} />
         <Stack.Screen name="Inscription" component={InscriptionScreen} />
         <Stack.Screen name="Connexion" component={ConnexionScreen} />
-        <Stack.Screen name="ChooseProfile" component={ChooseProfileScreen} />
+        <Stack.Screen name="Congratulations" component={CongratulationsScreen} />
         <Stack.Screen name="ChooseClasse" component={ChooseClasseScreen} />
         <Stack.Screen name="ChooseObjectif" component={ChooseObjectifScreen} />
         <Stack.Screen name="Main" component={MainTabs} />

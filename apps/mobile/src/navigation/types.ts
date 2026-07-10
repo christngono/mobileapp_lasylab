@@ -1,5 +1,5 @@
 import type { NavigatorScreenParams } from '@react-navigation/native';
-import type { SubjectId } from '@lasylab/shared';
+import type { SubjectId, UserRole } from '@lasylab/shared';
 
 /** Onglets principaux (barre de navigation basse). */
 export type MainTabsParamList = {
@@ -13,11 +13,12 @@ export type MainTabsParamList = {
 export type RootStackParamList = {
   Splash: undefined;
   Onboarding: undefined;
-  Inscription: undefined;
-  Connexion: undefined;
   ChooseProfile: undefined;
-  ChooseClasse: undefined;
-  ChooseObjectif: undefined;
+  Inscription: { role: UserRole };
+  Connexion: undefined;
+  Congratulations: { role: UserRole };
+  ChooseClasse: { role: UserRole };
+  ChooseObjectif: { role: UserRole };
   Main: NavigatorScreenParams<MainTabsParamList> | undefined;
   Parcours: { subjectId: SubjectId };
   Cours: { subjectId: SubjectId; nodeIndex: number };
