@@ -9,6 +9,7 @@ import type { User } from '@prisma/client';
 import type { AuthResponseDTO } from '@lasylab/shared';
 import { PrismaService } from '../../prisma/prisma.service';
 import { toPrismaRole, toUserDTO } from '../../common/user.mapper';
+import { normalizePhone } from '../../common/phone';
 import type { JwtPayload } from './jwt-auth.guard';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -21,9 +22,11 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto): Promise<AuthResponseDTO> {
-    const existing = await this.prisma.user.findUnique({
-      where: { phone: dto.phone },
-    });
+    const phone = normalizePhone(dto.phone);
+    if (phone.length < 6) {
+      throw new ConflictException('Numéro de téléphone invalide.');
+    }
+    const existing = await this.prisma.user.findUnique({ where: { phone } });
     if (existing) {
       throw new ConflictException('Un compte existe déjà avec ce numéro.');
     }
@@ -34,7 +37,7 @@ export class AuthService {
       data: {
         name: dto.name,
         firstName: dto.firstName ?? null,
-        phone: dto.phone,
+        phone,
         passwordHash,
         role,
         consent: dto.consent ?? false,
@@ -54,7 +57,7 @@ export class AuthService {
 
   async login(dto: LoginDto): Promise<AuthResponseDTO> {
     const user = await this.prisma.user.findUnique({
-      where: { phone: dto.phone },
+      where: { phone: normalizePhone(dto.phone) },
     });
     if (!user || !user.passwordHash) {
       throw new UnauthorizedException('Numéro ou mot de passe incorrect.');

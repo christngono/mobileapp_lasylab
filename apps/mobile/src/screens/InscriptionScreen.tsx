@@ -113,7 +113,7 @@ export default function InscriptionScreen({ navigation, route }: Props) {
             </View>
 
             <TextField label="Nom" labelColor={colors.blue} borderColor={colors.blue} placeholder="Ton nom" value={name} onChangeText={setName} containerStyle={styles.field} />
-            <TextField label="Téléphone" placeholder="+229 ..." keyboardType="phone-pad" value={phone} onChangeText={setPhone} containerStyle={styles.field} />
+            <TextField label="Téléphone" placeholder="Ex. 694 74 42 42" keyboardType="phone-pad" value={phone} onChangeText={setPhone} containerStyle={styles.field} />
             <TextField label="Mot de passe" placeholder="••••••••" password value={password} onChangeText={setPassword} containerStyle={styles.field} />
 
             {/* --- Champs Élève --- */}

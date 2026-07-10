@@ -92,7 +92,7 @@ Exemples de requêtes dans [`api.http`](api.http).
 `npm run prisma:seed` insère : les 6 matières, la leçon **« Le Discriminant »**
 (maths) + son quiz, l'**introduction à la philosophie** + le **quiz de
 philosophie** (repris du mock), 4 stories, 9 activités/épreuves, 4 badges, et un
-**élève de démo** : `+22900000000` / mot de passe `lasylab`
+**élève de démo** : `691111111` / mot de passe `lasylab`
 (progression Français 4 · Philosophie 2, comme l'état initial du prototype).
 
 Le seed est idempotent (upsert / remplacement ciblé).

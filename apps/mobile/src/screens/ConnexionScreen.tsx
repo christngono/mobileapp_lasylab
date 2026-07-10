@@ -53,7 +53,7 @@ export default function ConnexionScreen({ navigation }: Props) {
               label="Téléphone"
               labelColor={colors.textFaint}
               borderColor={colors.inputBorder}
-              placeholder="+229 ..."
+              placeholder="Ex. 694 74 42 42"
               keyboardType="phone-pad"
               value={phone}
               onChangeText={setPhone}

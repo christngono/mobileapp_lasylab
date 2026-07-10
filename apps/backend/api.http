@@ -7,7 +7,7 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "phone": "+22900000000",
+  "phone": "691111111",
   "password": "lasylab"
 }
 

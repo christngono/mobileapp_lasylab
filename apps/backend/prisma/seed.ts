@@ -172,12 +172,12 @@ async function seedBadges() {
 async function seedDemoUser() {
   const passwordHash = await bcrypt.hash('lasylab', 10);
   const user = await prisma.user.upsert({
-    where: { phone: '+22900000000' },
+    where: { phone: '691111111' },
     update: {},
     create: {
       role: UserRole.STUDENT,
       name: 'Sara',
-      phone: '+22900000000',
+      phone: '691111111',
       passwordHash,
       classe: '1ère',
       objectifs: ['Augmenter mes notes'],
@@ -211,18 +211,18 @@ async function seedDemoUser() {
       });
     }
   }
-  console.log('✓ Élève de démo : Sara (+22900000000 / lasylab)');
+  console.log('✓ Élève de démo : Sara (691111111 / lasylab)');
 }
 
 async function seedDemoTeacher() {
   const passwordHash = await bcrypt.hash('lasylab', 10);
   await prisma.user.upsert({
-    where: { phone: '+22900000001' },
+    where: { phone: '692222222' },
     update: {},
     create: {
       role: UserRole.TEACHER,
       name: 'M. Koffi',
-      phone: '+22900000001',
+      phone: '692222222',
       passwordHash,
       subjects: ['maths', 'informatique'],
       schools: ['Lycée Lasylab'],
@@ -231,18 +231,18 @@ async function seedDemoTeacher() {
       consent: true,
     },
   });
-  console.log('✓ Enseignant de démo : M. Koffi (+22900000001 / lasylab)');
+  console.log('✓ Enseignant de démo : M. Koffi (692222222 / lasylab)');
 }
 
 async function seedDemoParent() {
   const passwordHash = await bcrypt.hash('lasylab', 10);
   const parent = await prisma.user.upsert({
-    where: { phone: '+22900000002' },
+    where: { phone: '693333333' },
     update: {},
     create: {
       role: UserRole.PARENT,
       name: 'Mme Adjovi',
-      phone: '+22900000002',
+      phone: '693333333',
       passwordHash,
       childrenCount: 2,
       consent: true,
@@ -261,7 +261,7 @@ async function seedDemoParent() {
       });
     }
   }
-  console.log('✓ Parent de démo : Mme Adjovi (+22900000002 / lasylab) + 2 enfants');
+  console.log('✓ Parent de démo : Mme Adjovi (693333333 / lasylab) + 2 enfants');
 }
 
 async function main() {
